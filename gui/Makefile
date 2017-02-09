@@ -20,12 +20,12 @@ BANNERTOOL 	?= bannertool
 # Generate version number
 #---------------------------------------------------------------------------------
 
-VERSION_PARTS := $(subst ., ,$(shell git describe --tags --abbrev=0))
-	
+VERSION_DIRTY := $(subst v,,$(shell git describe --tags --abbrev=0))
+VERSION_PARTS := $(subst ., ,$(VERSION_DIRTY))
+
 VERSION_MAJOR := $(word 1, $(VERSION_PARTS))
 VERSION_MINOR := $(word 2, $(VERSION_PARTS))
 VERSION_MICRO := $(word 3, $(VERSION_PARTS))
-
 #---------------------------------------------------------------------------------
 # TARGET is the name of the output
 # BUILD is the directory where object files & intermediate files will be placed

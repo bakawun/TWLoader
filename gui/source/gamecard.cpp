@@ -26,7 +26,7 @@ static GameCardType card_type = CARD_TYPE_UNKNOWN;
 static char card_product_code[20] = { };
 static u8 card_revision = 0xFF;
 static u64 card_tid = 0;
-static sf2d_texture *card_icon = NULL;
+static sf2d_texture* card_icon = NULL;
 static vector<wstring> card_text;
 
 /**
@@ -67,7 +67,7 @@ static void gamecardCacheTWL(void)
 	twl_gameid.d = gameid;
 
 	// Card type.
-	const char *prefix;
+	const char* prefix;
 	switch (header.unitCode & 0x03) {
 		case 0x00:
 		default:
@@ -152,7 +152,7 @@ static void gamecardCacheCTR(void)
 		return;
 	}
 	// Make sure it's NULL-terminated.
-	card_product_code[20-1] = 0;
+	card_product_code[20 - 1] = 0;
 
 	// Get the SMDH, which contains the icon and banner.
 	static const u32 filePathData[] = {0x00000000, 0x00000000, 0x00000002, 0x6E6F6369, 0x00000000};
@@ -167,15 +167,14 @@ static void gamecardCacheCTR(void)
 
 	Handle fileHandle;
 	if (R_FAILED(FSUSER_OpenFileDirectly(&fileHandle, ARCHIVE_SAVEDATA_AND_CONTENT,
-	    archivePath, filePath, FS_OPEN_READ, 0)))
-	{
+	                                     archivePath, filePath, FS_OPEN_READ, 0))) {
 		// Could not open the SMDH file.
 		gamecardClearCache();
 		return;
 	}
 
 	static_assert(sizeof(SMDH) == 14016, "sizeof(SMDH) is not 14,016 bytes");
-	SMDH *smdh = (SMDH*)calloc(1, sizeof(SMDH));
+	SMDH* smdh = (SMDH*)calloc(1, sizeof(SMDH));
 	if (!smdh) {
 		// calloc() failed.
 		gamecardClearCache();
@@ -194,7 +193,7 @@ static void gamecardCacheCTR(void)
 	}
 
 	// Verify the SMDH magic.
-	static const u8 smdh_magic[] = {'S','M','D','H'};
+	static const u8 smdh_magic[] = {'S', 'M', 'D', 'H'};
 	if (memcmp(smdh->magic, smdh_magic, sizeof(smdh_magic)) != 0) {
 		// Incorrect SMDH magic.
 		free(smdh);
@@ -229,7 +228,7 @@ static void gamecardCacheCTR(void)
 
 	// Add the publisher.
 	// TODO: Make sure we don't have more than two lines here.
-	smdh->titles[lang].publisher[0x40-1] = 0;
+	smdh->titles[lang].publisher[0x40 - 1] = 0;
 	card_text.push_back(utf16_to_wstring(smdh->titles[lang].publisher));
 	free(smdh);
 
@@ -318,7 +317,7 @@ GameCardType gamecardGetType(void)
  * Get the game card's game ID.
  * @return Game ID, or NULL if not a TWL card.
  */
-const char *gamecardGetGameID(void)
+const char* gamecardGetGameID(void)
 {
 	return (twl_gameid.d != 0 ? twl_gameid.id4 : NULL);
 }
@@ -336,7 +335,7 @@ u32 gamecardGetGameID_u32(void)
  * Get the game card's product code.
  * @return Product code, or NULL if not a TWL card.
  */
-const char *gamecardGetProductCode(void)
+const char* gamecardGetProductCode(void)
 {
 	return card_product_code;
 }
@@ -364,7 +363,7 @@ u64 gamecardGetTitleID(void)
  * Get the game card's icon.
  * @return Game card icon, or NULL if not a TWL card.
  */
-sf2d_texture *gamecardGetIcon(void)
+sf2d_texture* gamecardGetIcon(void)
 {
 	return card_icon;
 }

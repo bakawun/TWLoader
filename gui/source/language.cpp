@@ -20,7 +20,7 @@
 #include "languages/russian.h"
 
 // All languages.
-static const char *const *lang_all[12] = {
+static const char* const* lang_all[12] = {
 	lang_JP,	// Japanese
 	lang_EN,	// English
 	lang_FR,	// French
@@ -40,10 +40,10 @@ static const char *const *lang_all[12] = {
 // System language setting.
 u8 language = 1;	// UI language ID.
 u8 sys_language = 1;	// System language ID.
-static const char *const *lang_data = lang_all[1];
+static const char* const* lang_data = lang_all[1];
 
 // Translation cache.
-static wchar_t *lang_cache[STR_MAX] = { };
+static wchar_t* lang_cache[STR_MAX] = { };
 
 /**
  * Initialize translations.
@@ -52,8 +52,7 @@ static wchar_t *lang_cache[STR_MAX] = { };
 void langInit(void)
 {
 	if (R_FAILED(CFGU_GetSystemLanguage(&sys_language)) ||
-	    (sys_language < 0 || sys_language >= 12))
-	{
+	        (sys_language < 0 || sys_language >= 12)) {
 		// Invalid system language ID.
 		// Default to English.
 		sys_language = 1;
@@ -77,7 +76,7 @@ void langInit(void)
  */
 void langClear(void)
 {
-	for (int i = STR_MAX-1; i >= 0; i--) {
+	for (int i = STR_MAX - 1; i >= 0; i--) {
 		free(lang_cache[i]);
 		lang_cache[i] = NULL;
 	}
@@ -91,7 +90,7 @@ void langClear(void)
  * @param strID String ID.
  * @return Translation, or error string if strID is invalid.
  */
-const wchar_t *TR(StrID strID)
+const wchar_t* TR(StrID strID)
 {
 	if (strID < 0 || strID >= STR_MAX) {
 		// Invalid string ID.

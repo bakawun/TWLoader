@@ -48,7 +48,7 @@ sound::sound(const string& path, int channel, bool toloop)
 	}
 
 	// Verify the header.
-	static const char RIFF_magic[4] = {'R','I','F','F'};
+	static const char RIFF_magic[4] = {'R', 'I', 'F', 'F'};
 	if (memcmp(wavHeader.magic, RIFF_magic, sizeof(wavHeader.magic)) != 0) {
 		// Incorrect magic number.
 		printf("Wrong file format.\n");
@@ -57,9 +57,8 @@ sound::sound(const string& path, int channel, bool toloop)
 	}
 
 	if (wavHeader.totallength == 0 ||
-	   (wavHeader.channels != 1 && wavHeader.channels != 2) ||
-	   (wavHeader.bits_per_sample != 8 && wavHeader.bits_per_sample != 16))
-	{
+	        (wavHeader.channels != 1 && wavHeader.channels != 2) ||
+	        (wavHeader.bits_per_sample != 8 && wavHeader.bits_per_sample != 16)) {
 		// Unsupported WAV file.
 		printf("Corrupted wav file.\n");
 		fclose(fp);
@@ -81,12 +80,12 @@ sound::sound(const string& path, int channel, bool toloop)
 	u16 ndspFormat;
 	if (wavHeader.bits_per_sample == 8) {
 		ndspFormat = (wavHeader.channels == 1) ?
-			NDSP_FORMAT_MONO_PCM8 :
-			NDSP_FORMAT_STEREO_PCM8;
+		             NDSP_FORMAT_MONO_PCM8 :
+		             NDSP_FORMAT_STEREO_PCM8;
 	} else {
 		ndspFormat = (wavHeader.channels == 1) ?
-			NDSP_FORMAT_MONO_PCM16 :
-			NDSP_FORMAT_STEREO_PCM16;
+		             NDSP_FORMAT_MONO_PCM16 :
+		             NDSP_FORMAT_STEREO_PCM16;
 	}
 
 	ndspChnReset(channel);
@@ -119,15 +118,17 @@ sound::~sound()
 
 void sound::play()
 {
-	if (!data)
+	if (!data) {
 		return;
+	}
 	DSP_FlushDataCache(data, dataSize);
 	ndspChnWaveBufAdd(chnl, &waveBuf);
 }
 
 void sound::stop()
 {
-	if (!data)
+	if (!data) {
 		return;
+	}
 	ndspChnWaveBufClear(chnl);
 }

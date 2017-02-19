@@ -55,7 +55,7 @@ int downloadBootstrapVersion(bool type);
  */
 
 void checkBootstrapVersion(void);
- 
+
 /**
  * Download Slot-1 boxart.
  */

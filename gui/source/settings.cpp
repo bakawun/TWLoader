@@ -25,19 +25,19 @@ using std::wstring;
 
 /** Top screen **/
 static bool settings_tex_loaded = false;
-static sf2d_texture *whomeicontex = NULL;	// HOME icon.
-static sf2d_texture *setvoltex[6] = { };	// Volume levels.
-static sf2d_texture *setbatterychrgtex = NULL;	// Fully charged.
-static sf2d_texture *setbatterytex[6] = { };	// Battery levels.
+static sf2d_texture* whomeicontex = NULL;	// HOME icon.
+static sf2d_texture* setvoltex[6] = { };	// Volume levels.
+static sf2d_texture* setbatterychrgtex = NULL;	// Fully charged.
+static sf2d_texture* setbatterytex[6] = { };	// Battery levels.
 
-static sf2d_texture *dsboottex = NULL;		// DS boot screen
-static sf2d_texture *dsiboottex = NULL;	// DSi boot screen
-static sf2d_texture *dshstex = NULL;		// DS H&S screen
-static sf2d_texture *dsihstex = NULL;		// DSi H&S screen
-static sf2d_texture *disabledtex = NULL;	// Red circle with line
+static sf2d_texture* dsboottex = NULL;		// DS boot screen
+static sf2d_texture* dsiboottex = NULL;	// DSi boot screen
+static sf2d_texture* dshstex = NULL;		// DS H&S screen
+static sf2d_texture* dsihstex = NULL;		// DSi H&S screen
+static sf2d_texture* disabledtex = NULL;	// Red circle with line
 
 /** Bottom screen **/
-sf2d_texture *settingstex = NULL;
+sf2d_texture* settingstex = NULL;
 
 enum SubScreenMode {
 	SUBSCREEN_MODE_FRONTEND = 0,	// Frontend settings
@@ -54,7 +54,7 @@ static CIniFile settingsini("sdmc:/_nds/twloader/settings.ini");
 
 // Color settings.
 // Use SET_ALPHA() to replace the alpha value.
-const ColorData *color_data = NULL;
+const ColorData* color_data = NULL;
 u32 menucolor;
 
 // 3D offsets. (0 == Left, 1 == Right)
@@ -84,14 +84,15 @@ void settingsResetSubScreenMode(void)
  */
 void settingsLoadTextures(void)
 {
-	if (settings_tex_loaded)
+	if (settings_tex_loaded) {
 		return;
+	}
 
 	/** Top screen **/
 	setvoltex[0] = sfil_load_PNG_file("romfs:/graphics/settings/volume0.png", SF2D_PLACE_RAM); // Show no volume (settings)
 	setvoltex[1] = sfil_load_PNG_file("romfs:/graphics/settings/volume1.png", SF2D_PLACE_RAM); // Volume low above 0 (settings)
 	setvoltex[2] = sfil_load_PNG_file("romfs:/graphics/settings/volume2.png", SF2D_PLACE_RAM); // Volume medium (settings)
-	setvoltex[3] = sfil_load_PNG_file("romfs:/graphics/settings/volume3.png", SF2D_PLACE_RAM); // Hight volume (settings)	
+	setvoltex[3] = sfil_load_PNG_file("romfs:/graphics/settings/volume3.png", SF2D_PLACE_RAM); // Hight volume (settings)
 	setvoltex[4] = sfil_load_PNG_file("romfs:/graphics/settings/volume4.png", SF2D_PLACE_RAM); // 100% (settings)
 	setvoltex[5] = sfil_load_PNG_file("romfs:/graphics/settings/volume5.png", SF2D_PLACE_RAM); // No DSP firm found (settings)
 
@@ -149,8 +150,9 @@ void settingsLoadTextures(void)
  */
 void settingsUnloadTextures(void)
 {
-	if (!settings_tex_loaded)
+	if (!settings_tex_loaded) {
 		return;
+	}
 
 	/** Top screen **/
 	for (int i = 0; i < 6; i++) {
@@ -205,43 +207,45 @@ void settingsDrawTopScreen(void)
 		sf2d_draw_texture_scale(settingstex, 0, 0, 1.32, 1);
 		if (subscreenmode == SUBSCREEN_MODE_NTR_TWL) {
 			if (settings.twl.bootscreen == 2) {
-				sf2d_draw_texture(dsiboottex, offset3D[topfb].boxart+136, 20); // Draw boot screen
+				sf2d_draw_texture(dsiboottex, offset3D[topfb].boxart + 136, 20); // Draw boot screen
 			} else if (settings.twl.bootscreen == 1) {
-				sf2d_draw_texture(dsboottex, offset3D[topfb].boxart+136, 20); // Draw boot screen
+				sf2d_draw_texture(dsboottex, offset3D[topfb].boxart + 136, 20); // Draw boot screen
 			} else {
-				sf2d_draw_rectangle(offset3D[topfb].boxart+136, 20, 128, 96, RGBA8(255, 255, 255, 255));
+				sf2d_draw_rectangle(offset3D[topfb].boxart + 136, 20, 128, 96, RGBA8(255, 255, 255, 255));
 			}
 			if (settings.twl.healthsafety == 1) {
 				if (settings.twl.bootscreen == 2) {
-					sf2d_draw_texture(dsihstex, offset3D[topfb].boxart+136, 124); // Draw H&S screen
+					sf2d_draw_texture(dsihstex, offset3D[topfb].boxart + 136, 124); // Draw H&S screen
 				} else if (settings.twl.bootscreen == 1) {
-					sf2d_draw_texture(dshstex, offset3D[topfb].boxart+136, 124); // Draw H&S screen
+					sf2d_draw_texture(dshstex, offset3D[topfb].boxart + 136, 124); // Draw H&S screen
 				} else {
-					sf2d_draw_rectangle(offset3D[topfb].boxart+136, 124, 128, 96, RGBA8(255, 255, 255, 255));
+					sf2d_draw_rectangle(offset3D[topfb].boxart + 136, 124, 128, 96, RGBA8(255, 255, 255, 255));
 				}
 			} else {
 				// Draw a white screen in place of the H&S screen.
-				sf2d_draw_rectangle(offset3D[topfb].boxart+136, 124, 128, 96, RGBA8(255, 255, 255, 255));
+				sf2d_draw_rectangle(offset3D[topfb].boxart + 136, 124, 128, 96, RGBA8(255, 255, 255, 255));
 			}
 			if (settings.twl.bootscreen == 0) {
-				sf2d_draw_texture(disabledtex, offset3D[topfb].disabled+136, 20); // Draw disabled texture
-				sf2d_draw_texture(disabledtex, offset3D[topfb].disabled+136, 124); // Draw disabled texture
+				sf2d_draw_texture(disabledtex, offset3D[topfb].disabled + 136, 20); // Draw disabled texture
+				sf2d_draw_texture(disabledtex, offset3D[topfb].disabled + 136, 124); // Draw disabled texture
 			}
 		} else {
-			sf2d_draw_texture(settingslogotex, offset3D[topfb].boxart+400/2 - settingslogotex->width/2, 240/2 - settingslogotex->height/2);
+			sf2d_draw_texture(settingslogotex, offset3D[topfb].boxart + 400 / 2 - settingslogotex->width / 2, 240 / 2 - settingslogotex->height / 2);
 			if (subscreenmode == SUBSCREEN_MODE_FRONTEND) {
-				sftd_draw_wtext(font, offset3D[topfb].disabled+72, 166, RGBA8(0, 0, 255, 255), 14, TR(STR_SETTINGS_XBUTTON_RELEASE));
-				sftd_draw_wtext(font, offset3D[topfb].disabled+72, 180, RGBA8(0, 255, 0, 255), 14, TR(STR_SETTINGS_YBUTTON_UNOFFICIAL));
-				if(!is3DSX) sftd_draw_wtext(font, offset3D[topfb].disabled+72, 194, RGBA8(255, 255, 255, 255), 14, TR(STR_SETTINGS_SETTINGS_START_UPDATE_TWLOADER));
+				sftd_draw_wtext(font, offset3D[topfb].disabled + 72, 166, RGBA8(0, 0, 255, 255), 14, TR(STR_SETTINGS_XBUTTON_RELEASE));
+				sftd_draw_wtext(font, offset3D[topfb].disabled + 72, 180, RGBA8(0, 255, 0, 255), 14, TR(STR_SETTINGS_YBUTTON_UNOFFICIAL));
+				if (!is3DSX) {
+					sftd_draw_wtext(font, offset3D[topfb].disabled + 72, 194, RGBA8(255, 255, 255, 255), 14, TR(STR_SETTINGS_SETTINGS_START_UPDATE_TWLOADER));
+				}
 			}
 		}
 
 		sftd_draw_text(font, 328, 3, RGBA8(255, 255, 255, 255), 12, RetTime(false).c_str());
-		
-		std::string version = settings_vertext;		
+
+		std::string version = settings_vertext;
 		if (version.substr(version.find_first_not_of(' '), (version.find_last_not_of(' ') - version.find_first_not_of(' ') + 1)).size() > 8) {
 			sftd_draw_text(font, 334, 222, RGBA8(255, 255, 255, 255), 14, settings_vertext);
-		}else{
+		} else {
 			sftd_draw_text(font, 347, 222, RGBA8(255, 255, 255, 255), 14, settings_vertext);
 		}
 		settings.twl.bootstrapfile ? sftd_draw_text(font, 5, 222, RGBA8(0, 0, 255, 255), 14, settings_releasebootstrapver.c_str()) : sftd_draw_text(font, 5, 222, RGBA8(0, 255, 0, 255), 14, settings_unofficialbootstrapver.c_str());
@@ -268,28 +272,28 @@ void settingsDrawBottomScreen(void)
 
 	sf2d_start_frame(GFX_BOTTOM, GFX_LEFT);
 	sf2d_draw_texture(settingstex, 0, 0);
-	if(!is3DSX) {
-		const wchar_t *home_text = TR(STR_RETURN_TO_HOME_MENU);
+	if (!is3DSX) {
+		const wchar_t* home_text = TR(STR_RETURN_TO_HOME_MENU);
 		const int home_width = sftd_get_wtext_width(font, 13, home_text) + 16;
-		const int home_x = (320-home_width)/2;
+		const int home_x = (320 - home_width) / 2;
 		sf2d_draw_texture(whomeicontex, home_x, 220); // Draw HOME icon
-		sftd_draw_wtext(font, home_x+16, 221, RGBA8(255, 255, 255, 255), 13, home_text);
+		sftd_draw_wtext(font, home_x + 16, 221, RGBA8(255, 255, 255, 255), 13, home_text);
 	}
 
 	// X positions.
 	static const int Xpos = 24;
 	static const int XposValue = 236;
 	// Title for the bottom screen.
-	const wchar_t *title = L"";
+	const wchar_t* title = L"";
 
 	if (subscreenmode == SUBSCREEN_MODE_FRONTEND) {
 		sf2d_draw_texture(shoulderLtex, 0, LshoulderYpos);
 		sf2d_draw_texture(shoulderRtex, 248, RshoulderYpos);
-		sftd_draw_text(font, 17, LshoulderYpos+5, RGBA8(0, 0, 0, 255), 11, Lshouldertext);
-		sftd_draw_text(font, 252, RshoulderYpos+5, RGBA8(0, 0, 0, 255), 11, Rshouldertext);
+		sftd_draw_text(font, 17, LshoulderYpos + 5, RGBA8(0, 0, 0, 255), 11, Lshouldertext);
+		sftd_draw_text(font, 252, RshoulderYpos + 5, RGBA8(0, 0, 0, 255), 11, Rshouldertext);
 
 		// Language.
-		static const char *const language_text[] = {
+		static const char* const language_text[] = {
 			"日本語",	// Japanese
 			"English",	// English
 			"Français",	// French
@@ -313,15 +317,16 @@ void settingsDrawBottomScreen(void)
 		}
 
 		// Theme text.
-		static const char *const theme_text[] = {
+		static const char* const theme_text[] = {
 			"DSi Menu", "R4", "akMenu/Wood"
 		};
-		if (settings.ui.theme < 0 || settings.ui.theme > 2)
+		if (settings.ui.theme < 0 || settings.ui.theme > 2) {
 			settings.ui.theme = 0;
-		const char *const themevaluetext = theme_text[settings.ui.theme];
+		}
+		const char* const themevaluetext = theme_text[settings.ui.theme];
 
 		// Color text.
-		const wchar_t *color_text[] = {
+		const wchar_t* color_text[] = {
 			TR(STR_SETTINGS_VALUES_GRAY),
 			TR(STR_SETTINGS_VALUES_BROWN),
 			TR(STR_SETTINGS_VALUES_RED),
@@ -342,12 +347,13 @@ void settingsDrawBottomScreen(void)
 			TR(STR_SETTINGS_VALUES_GREEN_AND_YELLOW),
 			TR(STR_SETTINGS_VALUES_CHRISTMAS)
 		};
-		if (settings.ui.color < 0 || settings.ui.color > 18)
+		if (settings.ui.color < 0 || settings.ui.color > 18) {
 			settings.ui.color = 0;
-		const wchar_t *colorvaluetext = color_text[settings.ui.color];
+		}
+		const wchar_t* colorvaluetext = color_text[settings.ui.color];
 
 		// Menu color text.
-		const wchar_t *menu_color_text[] = {
+		const wchar_t* menu_color_text[] = {
 			TR(STR_SETTINGS_VALUES_WHITE),
 			TR(STR_SETTINGS_VALUES_BLACK),
 			TR(STR_SETTINGS_VALUES_BROWN),
@@ -366,15 +372,16 @@ void settingsDrawBottomScreen(void)
 			TR(STR_SETTINGS_VALUES_PURPLE),
 			TR(STR_SETTINGS_VALUES_FUCHSIA)
 		};
-		if (settings.ui.menucolor < 0 || settings.ui.menucolor > 18)
+		if (settings.ui.menucolor < 0 || settings.ui.menucolor > 18) {
 			settings.ui.menucolor = 0;
-		const wchar_t  *menucolorvaluetext = menu_color_text[settings.ui.menucolor];
+		}
+		const wchar_t*  menucolorvaluetext = menu_color_text[settings.ui.menucolor];
 
-		const char *const filenamevaluetext = (settings.ui.filename ? "On" : "Off");
-		const char *const countervaluetext = (settings.ui.counter ? "On" : "Off");
-		const char *const custombotvaluetext = (settings.ui.custombot ? "On" : "Off");
+		const char* const filenamevaluetext = (settings.ui.filename ? "On" : "Off");
+		const char* const countervaluetext = (settings.ui.counter ? "On" : "Off");
+		const char* const custombotvaluetext = (settings.ui.custombot ? "On" : "Off");
 
-		const char *autoupdatevaluetext;
+		const char* autoupdatevaluetext;
 		switch (settings.ui.autoupdate) {
 			case 0:
 			default:
@@ -387,7 +394,7 @@ void settingsDrawBottomScreen(void)
 				autoupdatevaluetext = "Unofficial";
 				break;
 		}
-		const char *autodlvaluetext = (settings.ui.autodl ? "On" : "Off");
+		const char* autodlvaluetext = (settings.ui.autodl ? "On" : "Off");
 
 		title = TR(STR_SETTINGS_GUI);
 		int Ypos = 40;
@@ -479,7 +486,7 @@ void settingsDrawBottomScreen(void)
 			sftd_draw_text(font, XposValue, Ypos, RGBA8(255, 255, 255, 255), 12, autoupdatevaluetext);
 			Ypos += 12;
 		}
-		if(!is3DSX) {
+		if (!is3DSX) {
 			if (cursor_pos[0] == 8) {
 				sftd_draw_wtext(font, Xpos, Ypos, SET_ALPHA(color_data->color, 255), 12, TR(STR_SETTINGS_AUTOUPDATE_TWLOADER));
 				sftd_draw_text(font, XposValue, Ypos, SET_ALPHA(color_data->color, 255), 12, autodlvaluetext);
@@ -493,7 +500,7 @@ void settingsDrawBottomScreen(void)
 			}
 		}
 		if (cursor_pos[0] == 9) {
-			// Selected			
+			// Selected
 			sftd_draw_wtext(font, Xpos, Ypos, SET_ALPHA(color_data->color, 255), 12, L"Rom path");
 			sftd_draw_wtext(font, 8, 184, RGBA8(255, 255, 255, 255), 13, L"Press A to change rom location folder.");
 			sftd_draw_wtext(font, 8, 198, RGBA8(255, 255, 255, 255), 13, L"");
@@ -507,24 +514,25 @@ void settingsDrawBottomScreen(void)
 	} else if (subscreenmode == SUBSCREEN_MODE_NTR_TWL) {
 		sf2d_draw_texture(shoulderLtex, 0, LshoulderYpos);
 		sf2d_draw_texture(shoulderRtex, 248, RshoulderYpos);
-		sftd_draw_text(font, 17, LshoulderYpos+5, RGBA8(0, 0, 0, 255), 11, Lshouldertext);
-		sftd_draw_text(font, 252, RshoulderYpos+5, RGBA8(0, 0, 0, 255), 11, Rshouldertext);
+		sftd_draw_text(font, 17, LshoulderYpos + 5, RGBA8(0, 0, 0, 255), 11, Lshouldertext);
+		sftd_draw_text(font, 252, RshoulderYpos + 5, RGBA8(0, 0, 0, 255), 11, Rshouldertext);
 
-		const char *rainbowledvaluetext = (settings.twl.rainbowled ? "On" : "Off");
-		const char *cpuspeedvaluetext = (settings.twl.cpuspeed ? "133mhz (TWL)" : "67mhz (NTR)");
-		const char *extvramvaluetext = (settings.twl.extvram ? "On" : "Off");
+		const char* rainbowledvaluetext = (settings.twl.rainbowled ? "On" : "Off");
+		const char* cpuspeedvaluetext = (settings.twl.cpuspeed ? "133mhz (TWL)" : "67mhz (NTR)");
+		const char* extvramvaluetext = (settings.twl.extvram ? "On" : "Off");
 		// Boot screen text.
-		static const char *const bootscreen_text[] = {
+		static const char* const bootscreen_text[] = {
 			"None", "Nintendo DS", "Nintendo DSi"
 		};
-		if (settings.twl.bootscreen < 0 || settings.twl.bootscreen > 2)
+		if (settings.twl.bootscreen < 0 || settings.twl.bootscreen > 2) {
 			settings.twl.bootscreen = 0;
-		const char *const bootscreenvaluetext = bootscreen_text[settings.twl.bootscreen];
-		const char *healthsafetyvaluetext = (settings.twl.healthsafety ? "On" : "Off");
-		const char *resetslot1valuetext = (settings.twl.resetslot1 ? "On" : "Off");
-		const char *bootstrapfilevaluetext = (settings.twl.bootstrapfile ? "Release" : "Unofficial");
+		}
+		const char* const bootscreenvaluetext = bootscreen_text[settings.twl.bootscreen];
+		const char* healthsafetyvaluetext = (settings.twl.healthsafety ? "On" : "Off");
+		const char* resetslot1valuetext = (settings.twl.resetslot1 ? "On" : "Off");
+		const char* bootstrapfilevaluetext = (settings.twl.bootstrapfile ? "Release" : "Unofficial");
 
-		const char *consolevaluetext;
+		const char* consolevaluetext;
 		switch (settings.twl.console) {
 			case 0:
 			default:
@@ -538,7 +546,7 @@ void settingsDrawBottomScreen(void)
 				break;
 		}
 
-		const char *lockarm9scfgextvaluetext = (settings.twl.lockarm9scfgext ? "On" : "Off");
+		const char* lockarm9scfgextvaluetext = (settings.twl.lockarm9scfgext ? "On" : "Off");
 
 		title = TR(STR_SETTINGS_NTR_TWL);
 		int Ypos = 40;
@@ -596,13 +604,13 @@ void settingsDrawBottomScreen(void)
 			Ypos += 12;
 		}
 		if (cursor_pos[1] == 5) {
-			sftd_draw_wtext(font, Xpos+16, Ypos, SET_ALPHA(color_data->color, 255), 12, TR(STR_SETTINGS_DS_DSi_SAFETY_MESSAGE));
+			sftd_draw_wtext(font, Xpos + 16, Ypos, SET_ALPHA(color_data->color, 255), 12, TR(STR_SETTINGS_DS_DSi_SAFETY_MESSAGE));
 			sftd_draw_text(font, XposValue, Ypos, SET_ALPHA(color_data->color, 255), 12, healthsafetyvaluetext);
 			Ypos += 12;
 			sftd_draw_wtext(font, 8, 184, RGBA8(255, 255, 255, 255), 13, TR(STR_SETTINGS_DESCRIPTION_DS_DSi_SAFETY_MESSAGE_1));
 			sftd_draw_wtext(font, 8, 198, RGBA8(255, 255, 255, 255), 13, TR(STR_SETTINGS_DESCRIPTION_DS_DSi_SAFETY_MESSAGE_2));
 		} else {
-			sftd_draw_wtext(font, Xpos+16, Ypos, RGBA8(255, 255, 255, 255), 12, TR(STR_SETTINGS_DS_DSi_SAFETY_MESSAGE));
+			sftd_draw_wtext(font, Xpos + 16, Ypos, RGBA8(255, 255, 255, 255), 12, TR(STR_SETTINGS_DS_DSi_SAFETY_MESSAGE));
 			sftd_draw_text(font, XposValue, Ypos, RGBA8(255, 255, 255, 255), 12, healthsafetyvaluetext);
 			Ypos += 12;
 		}
@@ -652,9 +660,11 @@ void settingsDrawBottomScreen(void)
 		}
 	} else if (subscreenmode == SUBSCREEN_MODE_FLASH_CARD) {
 		// Flash card options.
-		static const char *const flash_card_options[][6] = {
-			{"DSTT", "R4i Gold", "R4i-SDHC (Non-v1.4.x version) (www.r4i-sdhc.com)",
-				"R4 SDHC Dual-Core", "R4 SDHC Upgrade", "SuperCard DSONE"},
+		static const char* const flash_card_options[][6] = {
+			{
+				"DSTT", "R4i Gold", "R4i-SDHC (Non-v1.4.x version) (www.r4i-sdhc.com)",
+				"R4 SDHC Dual-Core", "R4 SDHC Upgrade", "SuperCard DSONE"
+			},
 			{"Original R4", "M3 Simply", " ", " ", " ", " "},
 			{"R4iDSN", "R4i Gold RTS", " ", " ", " ", " "},
 			{"Acekard 2(i)", "Galaxy Eagle", "M3DS Real", " ", " ", " "},
@@ -666,12 +676,12 @@ void settingsDrawBottomScreen(void)
 		if (settings.twl.flashcard < 0 || settings.twl.flashcard > 6) {
 			settings.twl.flashcard = 0;
 		}
-		const char *const *fctext = flash_card_options[settings.twl.flashcard];
+		const char* const* fctext = flash_card_options[settings.twl.flashcard];
 		title = TR(STR_SETTINGS_FLASHCARD_SELECT);
 		int Ypos = 40;
 		for (int i = 0; i < 6; i++, Ypos += 12) {
 			sftd_draw_text(font, Xpos, Ypos,
-				SET_ALPHA(color_data->color, 255), 12, fctext[i]);
+			               SET_ALPHA(color_data->color, 255), 12, fctext[i]);
 		}
 		sftd_draw_wtext(font, 8, 184, RGBA8(255, 255, 255, 255), 13, TR(STR_SETTINGS_LEFTRIGHT_PICK));
 		sftd_draw_wtext(font, 8, 198, RGBA8(255, 255, 255, 255), 13, TR(STR_SETTINGS_AB_SAVE_RETURN));
@@ -783,33 +793,33 @@ void settingsDrawBottomScreen(void)
 			Ypos += 12;
 		}
 		sftd_draw_wtext(font, 8, 198, RGBA8(255, 255, 255, 255), 13, TR(STR_SETTINGS_AB_SAVE_RETURN));
-	}else if (subscreenmode == SUBSCREEN_MODE_CHANGE_ROM_PATH) {
+	} else if (subscreenmode == SUBSCREEN_MODE_CHANGE_ROM_PATH) {
 		title = L"Rom path location";
-	
-		if (cursor_pos[4] == 0){
+
+		if (cursor_pos[4] == 0) {
 			// Selected SD
-			sftd_draw_text(font, 24, 40, SET_ALPHA(color_data->color, 255), 12, "SD ROM location:");			
+			sftd_draw_text(font, 24, 40, SET_ALPHA(color_data->color, 255), 12, "SD ROM location:");
 			sftd_draw_textf(font, 30, 52, SET_ALPHA(color_data->color, 255), 12, "SD:/%s", settings.ui.romfolder.c_str());
-			
+
 			// Unselect Flashcard
 			sftd_draw_text(font, 24, 66, RGBA8(255, 255, 255, 255), 12, "Flashcard INI location:");
 			sftd_draw_textf(font, 30, 78, RGBA8(255, 255, 255, 255), 12, "SD:/%s", settings.ui.fcromfolder.c_str());
-			
-		}else if (cursor_pos[4] == 1){
+
+		} else if (cursor_pos[4] == 1) {
 			// Unselected SD
 			sftd_draw_text(font, 24, 40, RGBA8(255, 255, 255, 255), 12, "SD ROM location:");
-			sftd_draw_textf(font, 30, 52, RGBA8(255, 255, 255, 255), 12, "SD:/%s", settings.ui.romfolder.c_str());		
-			
+			sftd_draw_textf(font, 30, 52, RGBA8(255, 255, 255, 255), 12, "SD:/%s", settings.ui.romfolder.c_str());
+
 			// Selected Flashcard
 			sftd_draw_text(font, 24, 66, SET_ALPHA(color_data->color, 255), 12, "Flashcard INI location:");
 			sftd_draw_textf(font, 30, 78, SET_ALPHA(color_data->color, 255), 12, "SD:/%s", settings.ui.fcromfolder.c_str());
-			
+
 		}
-		
+
 		sftd_draw_text(font, 24, 160, RGBA8(255, 255, 255, 255), 12, "TWLoader will auto-restart if location is changed");
-		
+
 		sftd_draw_text(font, 8, 184, RGBA8(255, 255, 255, 255), 13, "A: Change path");
-		sftd_draw_text(font, 8, 198, RGBA8(255, 255, 255, 255), 13, "B: Return");	
+		sftd_draw_text(font, 8, 198, RGBA8(255, 255, 255, 255), 13, "B: Return");
 	}
 	sftd_draw_wtext(font, 2, 2, RGBA8(255, 255, 255, 255), 16, title);
 }
@@ -833,7 +843,7 @@ bool settingsMoveCursor(u32 hDown)
 	}
 
 	// Sound effect to play.
-	sound *sfx = NULL;
+	sound* sfx = NULL;
 
 	if (subscreenmode == SUBSCREEN_MODE_SUB_THEME) {
 		if (hDown & KEY_UP) {
@@ -849,15 +859,17 @@ bool settingsMoveCursor(u32 hDown)
 		if (settings.ui.theme == 0) {
 			settings.ui.subtheme = 0;
 		} else if (settings.ui.theme == 1) {
-			if (settings.ui.subtheme < 0)
+			if (settings.ui.subtheme < 0) {
 				settings.ui.subtheme = 11;
-			else if (settings.ui.subtheme > 11)
+			} else if (settings.ui.subtheme > 11) {
 				settings.ui.subtheme = 0;
+			}
 		} else if (settings.ui.theme == 2) {
-			if (settings.ui.subtheme < 0)
+			if (settings.ui.subtheme < 0) {
 				settings.ui.subtheme = 3;
-			else if (settings.ui.subtheme > 3)
+			} else if (settings.ui.subtheme > 3) {
 				settings.ui.subtheme = 0;
+			}
 		}
 	} else if (subscreenmode == SUBSCREEN_MODE_FLASH_CARD) {
 		if (hDown & KEY_LEFT && settings.twl.flashcard > 0) {
@@ -929,7 +941,7 @@ bool settingsMoveCursor(u32 hDown)
 					break;
 				case 9: // Bootstrap version
 					settings.twl.bootstrapfile = ! settings.twl.bootstrapfile;
-					break;					
+					break;
 			}
 			sfx = sfx_select;
 		} else if ((hDown & KEY_DOWN) && cursor_pos[1] < 9) {
@@ -947,7 +959,7 @@ bool settingsMoveCursor(u32 hDown)
 			//bgm_settings->stop();
 			sfx = sfx_back;
 		}
-		if(hDown & KEY_TOUCH){
+		if (hDown & KEY_TOUCH) {
 			if (touch.px <= 72 && touch.py >= 220) {
 				subscreenmode = SUBSCREEN_MODE_FRONTEND;
 				sfx = sfx_switch;
@@ -984,8 +996,9 @@ bool settingsMoveCursor(u32 hDown)
 						if (settings.ui.theme < 0) {
 							settings.ui.theme = 2;
 						}
-					} else if (hDown & KEY_A)
+					} else if (hDown & KEY_A) {
 						subscreenmode = SUBSCREEN_MODE_SUB_THEME;
+					}
 					break;
 				case 2:	// Color
 					if (hDown & (KEY_A | KEY_RIGHT)) {
@@ -1050,9 +1063,10 @@ bool settingsMoveCursor(u32 hDown)
 			sfx = sfx_select;
 		} else if ((hDown & KEY_DOWN) && cursor_pos[0] < 9) {
 			cursor_pos[0]++;
-			if(is3DSX) {
-				if(cursor_pos[0] == 9)
+			if (is3DSX) {
+				if (cursor_pos[0] == 9) {
 					cursor_pos[0]--;
+				}
 			}
 			sfx = sfx_select;
 		} else if ((hDown & KEY_UP) && cursor_pos[0] > 0) {
@@ -1099,45 +1113,47 @@ bool settingsMoveCursor(u32 hDown)
 			fadeout = true;
 			sfx = sfx_back;
 		}
-		if(hDown & KEY_TOUCH){
+		if (hDown & KEY_TOUCH) {
 			if (touch.px >= 248 && touch.py >= 220) {
 				subscreenmode = SUBSCREEN_MODE_NTR_TWL;
 				sfx = sfx_switch;
 			}
 		}
-	}else if (subscreenmode == SUBSCREEN_MODE_CHANGE_ROM_PATH) {
+	} else if (subscreenmode == SUBSCREEN_MODE_CHANGE_ROM_PATH) {
 		if (hDown & KEY_UP) {
 			cursor_pos[4]--;
-			if (cursor_pos[4] < 0)
-				cursor_pos[4] = 0;			
+			if (cursor_pos[4] < 0) {
+				cursor_pos[4] = 0;
+			}
 			sfx = sfx_select;
 		} else if (hDown & KEY_DOWN) {
 			cursor_pos[4]++;
-			if (cursor_pos[4] > 1)
+			if (cursor_pos[4] > 1) {
 				cursor_pos[4] = 1;
+			}
 			sfx = sfx_select;
-		} else if (hDown & KEY_B) {		
+		} else if (hDown & KEY_B) {
 			subscreenmode = SUBSCREEN_MODE_FRONTEND;
 			sfx = sfx_select;
 		} else if (hDown & KEY_A) {
 			std::string oldPath = (cursor_pos[4] == 0) ? settings.ui.romfolder : settings.ui.fcromfolder;
-			std::wstring widestr = (cursor_pos[4] == 0) ? 
-													std::wstring(settings.ui.romfolder.begin(), settings.ui.romfolder.end()) : 
-													std::wstring(settings.ui.fcromfolder.begin(), settings.ui.fcromfolder.end());
-			
+			std::wstring widestr = (cursor_pos[4] == 0) ?
+			                       std::wstring(settings.ui.romfolder.begin(), settings.ui.romfolder.end()) :
+			                       std::wstring(settings.ui.fcromfolder.begin(), settings.ui.fcromfolder.end());
+
 			const wchar_t* currentPath = widestr.c_str();
 			std::string newPath = keyboardInput(currentPath);
-			
-			(cursor_pos[4] == 0) ? settings.ui.romfolder = newPath : settings.ui.fcromfolder = newPath;			
 
-			if(oldPath != newPath){						
+			(cursor_pos[4] == 0) ? settings.ui.romfolder = newPath : settings.ui.fcromfolder = newPath;
+
+			if (oldPath != newPath) {
 				// Buffers for APT_DoApplicationJump().
 				u8 param[0x300];
 				u8 hmac[0x20];
 				// Clear both buffers
 				memset(param, 0, sizeof(param));
 				memset(hmac, 0, sizeof(hmac));
-				
+
 				APT_PrepareToDoApplicationJump(0, 0x00040000047C4200LL, MEDIATYPE_SD);
 				// Tell APT to trigger the app launch and set the status of this app to exit
 				SaveSettings();
@@ -1159,7 +1175,8 @@ bool settingsMoveCursor(u32 hDown)
 /**
  * Load the primary color from the configuration.
  */
-void LoadColor(void) {
+void LoadColor(void)
+{
 	static const ColorData colors[] = {
 		{
 			"romfs:/graphics/topbg/0-gray.png",
@@ -1277,16 +1294,20 @@ void LoadColor(void) {
 		},
 	};
 
-	if (settings.ui.color < 0 || settings.ui.color > 18)
+	if (settings.ui.color < 0 || settings.ui.color > 18) {
 		settings.ui.color = 0;
+	}
 	color_data = &colors[settings.ui.color];
-	if (logEnabled)	LogFM("LoadColor()", "Colors load successfully");
+	if (logEnabled)	{
+		LogFM("LoadColor()", "Colors load successfully");
+	}
 }
 
 /**
  * Load the menu color from the configuration.
  */
-void LoadMenuColor(void) {
+void LoadMenuColor(void)
+{
 	static const u32 menu_colors[] = {
 		(u32)RGBA8(255, 255, 255, 255),		// White
 		(u32)RGBA8(63, 63, 63, 195),		// Black
@@ -1307,25 +1328,33 @@ void LoadMenuColor(void) {
 		(u32)RGBA8(255, 63, 127, 195),		// Fuchsia
 	};
 
-	if (settings.ui.menucolor < 0 || settings.ui.menucolor > 16)
+	if (settings.ui.menucolor < 0 || settings.ui.menucolor > 16) {
 		settings.ui.menucolor = 0;
+	}
 	menucolor = menu_colors[settings.ui.menucolor];
-	if (logEnabled)	LogFM("LoadMenuColor()", "Menu color load successfully");
+	if (logEnabled)	{
+		LogFM("LoadMenuColor()", "Menu color load successfully");
+	}
 }
 
 /**
  * Load the filename of the bottom screen image.
  */
-void LoadBottomImage() {
+void LoadBottomImage()
+{
 	bottomloc = "romfs:/graphics/bottom.png";
 
 	if (settings.ui.custombot == 1) {
-		if( access( "sdmc:/_nds/twloader/bottom.png", F_OK ) != -1 ) {
+		if (access("sdmc:/_nds/twloader/bottom.png", F_OK) != -1) {
 			bottomloc = "sdmc:/_nds/twloader/bottom.png";
-			if (logEnabled)	LogFM("LoadBottomImage()", "Using custom bottom image. Method load successfully");
+			if (logEnabled)	{
+				LogFM("LoadBottomImage()", "Using custom bottom image. Method load successfully");
+			}
 		} else {
 			bottomloc = "romfs:/graphics/bottom.png";
-			if (logEnabled)	LogFM("LoadBottomImage()", "Using default bottom image. Method load successfully");
+			if (logEnabled)	{
+				LogFM("LoadBottomImage()", "Using default bottom image. Method load successfully");
+			}
 		}
 	}
 }
@@ -1336,15 +1365,16 @@ void LoadBottomImage() {
  */
 static void RemoveTrailingSlashes(string& path)
 {
-	while (!path.empty() && path[path.size()-1] == '/') {
-		path.resize(path.size()-1);
+	while (!path.empty() && path[path.size() - 1] == '/') {
+		path.resize(path.size() - 1);
 	}
 }
 
 /**
  * Load settings.
  */
-void LoadSettings(void) {
+void LoadSettings(void)
+{
 	// UI settings.
 	settings.ui.name = settingsini.GetString("FRONTEND", "NAME", "");
 	settings.ui.romfolder = settingsini.GetString("FRONTEND", "ROM_FOLDER", "");
@@ -1393,13 +1423,16 @@ void LoadSettings(void) {
 			settings.twl.console = 0;
 			break;
 	}
-	if (logEnabled)	LogFM("Settings.LoadSettings", "Settings loaded successfully");
+	if (logEnabled)	{
+		LogFM("Settings.LoadSettings", "Settings loaded successfully");
+	}
 }
 
 /**
  * Save settings.
  */
-void SaveSettings(void) {
+void SaveSettings(void)
+{
 	// UI settings.
 	settingsini.SetString("FRONTEND", "ROM_FOLDER", settings.ui.romfolder);
 	settingsini.SetString("FRONTEND", "FCROM_FOLDER", settings.ui.fcromfolder);

@@ -4,10 +4,11 @@
 
 bool LogCreated = false;
 
-int createLog(void) {
-	if (!LogCreated){
+int createLog(void)
+{
+	if (!LogCreated) {
 		FILE* log = fopen(LOG_PATH, "w");
-		if (!log){
+		if (!log) {
 			return -1;
 		}
 		LogCreated = true;
@@ -20,9 +21,10 @@ int createLog(void) {
 	return 0;
 }
 
-void Log(const char *message) {
-	FILE *log;
- 
+void Log(const char* message)
+{
+	FILE* log;
+
 	if (!LogCreated) {
 		log = fopen(LOG_PATH, "w");
 		LogCreated = true;
@@ -38,11 +40,12 @@ void Log(const char *message) {
 	} else {
 		fputs(message, log);
 		fclose(log);
-	} 
+	}
 }
 
-void LogFM(const char *from, const char *message) {
-	FILE *log;
+void LogFM(const char* from, const char* message)
+{
+	FILE* log;
 
 	if (!LogCreated) {
 		log = fopen(LOG_PATH, "w");
@@ -67,8 +70,9 @@ void LogFM(const char *from, const char *message) {
 	}
 }
 
-void LogFMA(const char *from, const char *message, const char *additional_info) {
-	FILE *log;
+void LogFMA(const char* from, const char* message, const char* additional_info)
+{
+	FILE* log;
 
 	if (!LogCreated) {
 		log = fopen(LOG_PATH, "w");
@@ -88,9 +92,9 @@ void LogFMA(const char *from, const char *message, const char *additional_info) 
 		fputs("> :\r\t\tMessage: <", log);
 		fputs(message, log);
 		fputs("> \tAdditional info:<", log);
-		fputs(additional_info, log);		
+		fputs(additional_info, log);
 		fputs(">", log);
 		fputs("\n", log);
 		fclose(log);
-	} 
+	}
 }

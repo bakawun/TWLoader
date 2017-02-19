@@ -6,7 +6,7 @@
 
 // Textures.
 #include <sf2d.h>
-extern sf2d_texture *settingstex;
+extern sf2d_texture* settingstex;
 
 /** Settings **/
 
@@ -14,12 +14,12 @@ extern sf2d_texture *settingstex;
 // Use SET_ALPHA() to replace the alpha value.
 #define SET_ALPHA(color, alpha) ((((alpha) & 0xFF) << 24) | ((color) & 0x00FFFFFF))
 typedef struct _ColorData {
-	const char *topbgloc;
-	const char *dotcircleloc;
-	const char *startborderloc;
+	const char* topbgloc;
+	const char* dotcircleloc;
+	const char* startborderloc;
 	u32 color;
 } ColorData;
-extern const ColorData *color_data;
+extern const ColorData* color_data;
 extern u32 menucolor;
 
 // 3D offsets.
@@ -45,7 +45,7 @@ typedef struct _Settings_t {
 		std::string name;
 		std::string romfolder;
 		std::string fcromfolder;
-    
+
 		int language;	// Language. (0-11; other for system)
 		int theme;
 		int subtheme;
@@ -84,13 +84,13 @@ typedef struct _Settings_t {
 		bool resetslot1;
 		int console;	// 0 = Off, 1 = On, 2 = On (Debug)
 		bool lockarm9scfgext;
-		
+
 		int mpuregion; // Region 0, 1, 2, 3
 		int mpusize; // Size 0, 1, 3145728
-		
+
 		bool bootstrapfile; // true == release, false == unofficial
 	} twl;
-	
+
 	struct {
 		// -1 == default; 0 == off, 1 == on
 		s8 cpuspeed;	// false == NTR, true == TWL

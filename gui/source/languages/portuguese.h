@@ -4,7 +4,7 @@
 #include <3ds/types.h>
 
 // PORTUGUESE
-static const char *const lang_PT[STR_MAX] = {
+static const char* const lang_PT[STR_MAX] = {
 
 	/** GUI **/
 	": Voltar ao Menu HOME",									// "Return to HOME Menu"

@@ -25,7 +25,7 @@ void langClear(void);
 
 // String IDs.
 typedef enum _StrID {
-	
+
 	/** GUI **/
 	STR_RETURN_TO_HOME_MENU = 0,								// "Return to HOME Menu"
 	STR_START,													// "START" (used on cartridge indicator)
@@ -44,7 +44,7 @@ typedef enum _StrID {
 	STR_SETTINGS_CUSTOM_BOTTOM,									// "Custom bottom image"
 	STR_SETTINGS_AUTOUPDATE_BOOTSTRAP,							// "Auto-update bootstrap"
 	STR_SETTINGS_AUTOUPDATE_TWLOADER,							// "Auto-update to latest TWLoader"
-	
+
 	/** Settings: NTR/TWL_mode **/
 	STR_SETTINGS_FLASHCARD_SELECT,								// "Flashcard(s) select"
 	STR_SETTINGS_RAINBOW_LED,									// "Rainbow LED"
@@ -56,14 +56,14 @@ typedef enum _StrID {
 	STR_SETTINGS_CONSOLE_OUTPUT,								// "Console output"
 	STR_SETTINGS_LOCK_ARM9_SCFG_EXT,							// "Lock ARM9 SCFG_EXT"
 	STR_SETTINGS_BOOTSTRAP,										// "Bootstrap"
-	
+
 	/** Settings: Top Screen **/
 	STR_SETTINGS_XBUTTON_RELEASE,								// "X: Update bootstrap (Official release)"
 	STR_SETTINGS_YBUTTON_UNOFFICIAL,							// "Y: Update bootstrap (Unofficial release)"
 	STR_SETTINGS_SETTINGS_START_UPDATE_TWLOADER,				// "START: Update TWLoader"
-	
+
 	/** Settings: GUI values **/
-	
+
 	// Color
 	STR_SETTINGS_VALUES_GRAY,									// "Gray"
 	STR_SETTINGS_VALUES_BROWN,									// "Brown"
@@ -92,62 +92,62 @@ typedef enum _StrID {
 	/** Settings: GUI descriptions **/
 	STR_SETTINGS_DESCRIPTION_LANGUAGE_1,						// "The language to use for the UI,"
 	STR_SETTINGS_DESCRIPTION_LANGUAGE_2,						// "including game banner text."
-	
+
 	STR_SETTINGS_DESCRIPTION_THEME_1,							// "The theme to use in TWLoader."
 	STR_SETTINGS_DESCRIPTION_THEME_2,							// "Press A for sub-themes."
-	
+
 	STR_SETTINGS_DESCRIPTION_COLOR_1,							// "The color of the top background,"
 	STR_SETTINGS_DESCRIPTION_COLOR_2,							// "the START border, and the circling dots."
-	
+
 	STR_SETTINGS_DESCRIPTION_MENUCOLOR_1,						// "The color of the top border,"
 	STR_SETTINGS_DESCRIPTION_MENUCOLOR_2,						// "and the bottom background."
-	
+
 	STR_SETTINGS_DESCRIPTION_FILENAME_1,						// "Shows game filename at the top of the bubble."
 	STR_SETTINGS_DESCRIPTION_FILENAME_2,						// (empty)
-	
+
 	STR_SETTINGS_DESCRIPTION_COUNTER_1,							// "A number of selected game and listed games"
 	STR_SETTINGS_DESCRIPTION_COUNTER_2,							// "is shown below the text bubble."
-	
+
 	STR_SETTINGS_DESCRIPTION_CUSTOM_BOTTOM_1,					// "Loads a custom bottom screen image"
 	STR_SETTINGS_DESCRIPTION_CUSTOM_BOTTOM_2,					// "for the game menu."
-	
+
 	STR_SETTINGS_DESCRIPTION_AUTOUPDATE_BOOTSTRAP_1,			// "Auto-update nds-bootstrap at launch."
 	STR_SETTINGS_DESCRIPTION_AUTOUPDATE_BOOTSTRAP_2,			// (empty)
-	
+
 	STR_SETTINGS_DESCRIPTION_AUTOUPDATE_TWLOADER_1,				// "Auto-download the CIA of the latest"
 	STR_SETTINGS_DESCRIPTION_AUTOUPDATE_TWLOADER_2,				// "TWLoader version at launch."
-	
+
 	/** Settings: NTR/TWL_mode descriptions **/
 	STR_SETTINGS_DESCRIPTION_FLASHCARD_SELECT_1,				// "Pick a flashcard to use to"
 	STR_SETTINGS_DESCRIPTION_FLASHCARD_SELECT_2,				// "run ROMs from it."
-	
+
 	STR_SETTINGS_DESCRIPTION_RAINBOW_LED_1,						// "See rainbow colors glowing in"
 	STR_SETTINGS_DESCRIPTION_RAINBOW_LED_2,						// "the Notification LED."
-	
+
 	SRT_SETTINGS_DESCRIPTION_ARM9_CPU_SPEED_1,					// "Set to TWL to get rid of lags in some games."
 	SRT_SETTINGS_DESCRIPTION_ARM9_CPU_SPEED_2,					// (empty)
-	
+
 	STR_SETTINGS_DESCRIPTION_VRAM_BOOST_1,						// "Allows 8 bit VRAM writes"
 	STR_SETTINGS_DESCRIPTION_VRAM_BOOST_2,						// "and expands the bus to 32 bit."
-	
+
 	STR_SETTINGS_DESCRIPTION_DS_DSi_BOOT_SCREEN_1,				// "Displays the DS/DSi boot animation"
 	STR_SETTINGS_DESCRIPTION_DS_DSi_BOOT_SCREEN_2,				// "before launched game."
-	
+
 	STR_SETTINGS_DESCRIPTION_DS_DSi_SAFETY_MESSAGE_1,			// "Displays the Health and Safety"
 	STR_SETTINGS_DESCRIPTION_DS_DSi_SAFETY_MESSAGE_2,			// "message on the bottom screen."
-	
+
 	STR_SETTINGS_DESCRIPTION_RESET_SLOT_1_1,					// "Enable this if Slot-1 carts are stuck"
 	STR_SETTINGS_DESCRIPTION_RESET_SLOT_1_2,					// "on white screens."
-	
+
 	STR_SETTINGS_DESCRIPTION_CONSOLE_OUTPUT_1,					// "Displays some text before launched game."
 	STR_SETTINGS_DESCRIPTION_CONSOLE_OUTPUT_2,					// (empty)
-	
+
 	STR_SETTINGS_DESCRIPTION_LOCK_ARM9_SCFG_EXT_1,				// "Locks the ARM9 SCFG_EXT,"
 	STR_SETTINGS_DESCRIPTION_LOCK_ARM9_SCFG_EXT_2,				// "avoiding conflict with recent libnds."
-	
+
 	STR_SETTINGS_DESCRIPTION_BOOTSTRAP_1,						// "Change between release and"
 	STR_SETTINGS_DESCRIPTION_BOOTSTRAP_2,						// "unofficial bootstrap file."
-	
+
 	/** Start menu **/
 	// Options
 	STR_START_GAMELOCATION,										// "Game location"
@@ -162,7 +162,7 @@ typedef enum _StrID {
 	STR_START_SD_CARD,											// "SD Card"
 	STR_START_FLASHCARD,										// "Flashcard"
 	STR_START_SEARCH_HINT,										// "Use the keyboard to find roms"
-	
+
 	/** Select menu **/
 	// Options
 	STR_START_ARM9_CPU_SPEED,									// "ARM9 CPU Speed"
@@ -172,20 +172,20 @@ typedef enum _StrID {
 	STR_START_SET_LED,											// "Set LED color"
 	// Values
 	STR_START_DEFAULT,											// "Default"
-	
+
 	/** Sub-theme **/
 	STR_SETTINGS_SUBTHEME_DSi,									// "Sub-theme select: DSi Menu"
 	STR_SETTINGS_SUBTHEME_R4,									// "Sub-theme select: R4"
 	STR_SETTINGS_SUBTHEME_WOOD,									// "Sub-theme select: Wood"
-	
+
 	STR_SETTINGS_NO_SUB_THEMES,									// "No sub-themes exist for this theme."
-	
+
 	/** Settings others minor strings **/
 	STR_SETTINGS_AB_SAVE_RETURN,								// "A/B: Save and Return"
 	STR_SETTINGS_LEFTRIGHT_PICK,								// "Left/Right: Pick"
 	STR_SETTINGS_GUI,											// "Settings: GUI"
 	STR_SETTINGS_NTR_TWL,										// "Settings: NTR/TWL-mode"
-	
+
 	STR_MAX
 } StrID;
 
@@ -197,6 +197,6 @@ typedef enum _StrID {
  * @param strID String ID.
  * @return Translation, or error string if strID is invalid.
  */
-const wchar_t *TR(StrID strID);
+const wchar_t* TR(StrID strID);
 
 #endif /* TWLOADER_LANGUAGE_H */

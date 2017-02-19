@@ -4,10 +4,10 @@
 #include <3ds/types.h>
 
 // RUSSIAN
-static const char *const lang_RU[STR_MAX] = {
+static const char* const lang_RU[STR_MAX] = {
 
 	/** GUI **/
-  ": Вернуться в меню HOME",									// "Return to HOME Menu"
+	": Вернуться в меню HOME",									// "Return to HOME Menu"
 	"START",													// "START" (used on cartridge indicator)
 	"Отсутствует Картридж",												// "No cartridge"
 	"Неизвестный Картридж",											// "Unknown Cartridge"
@@ -40,7 +40,7 @@ static const char *const lang_RU[STR_MAX] = {
 	/** Settings: Top Screen **/
 	"X: Обновить Bootstrap (Оффициальная версия)",				// "X: Update bootstrap (Official release)"
 	"Y: Обновить Bootstrap (Неоффициальная версия)",				// "Y: Update bootstrap (Unofficial release)"
-  "START: Обновить TWLoader",							// "START: Update TWLoader"
+	"START: Обновить TWLoader",							// "START: Update TWLoader"
 
 	/** Settings: GUI values **/
 

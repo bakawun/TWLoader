@@ -19,11 +19,11 @@ using std::string;
  * @return Number of bytes written, excluding the NULL terminator.
  * @return Current date. (Caller must free() this string.)
  */
-size_t GetDate(DateFormat format, char *buf, size_t size)
+size_t GetDate(DateFormat format, char* buf, size_t size)
 {
 	time_t Raw;
 	time(&Raw);
-	const struct tm *Time = localtime(&Raw);
+	const struct tm* Time = localtime(&Raw);
 
 	switch (format) {
 		case FORMAT_YDM:
@@ -60,7 +60,7 @@ string RetTime(bool donotblink)
 {
 	time_t Raw;
 	time(&Raw);
-	const struct tm *Time = localtime(&Raw);
+	const struct tm* Time = localtime(&Raw);
 
 	// Blink the ':' approximately once per second.
 	// (120 is because two top frames are drawn every 1/60th
@@ -68,7 +68,7 @@ string RetTime(bool donotblink)
 	static int chartimer = 0;
 	if (!donotblink) {
 		chartimer++;
-		if (chartimer >= 120*2) {
+		if (chartimer >= 120 * 2) {
 			chartimer = 0;
 		}
 	} else {
@@ -97,8 +97,9 @@ void DrawDateF(int Xpos, int Ypos, DateFormat format, u32 color, int size)
 {
 	char date_str[24];
 	GetDate(format, date_str, sizeof(date_str));
-	if (date_str[0] == 0)
+	if (date_str[0] == 0) {
 		return;
+	}
 	sftd_draw_text(font, Xpos, Ypos, color, size, date_str);
 }
 

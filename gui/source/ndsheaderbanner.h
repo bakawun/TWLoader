@@ -49,7 +49,7 @@ typedef struct {
 	u8 logo[156];		//!< nintendo logo needed for booting the game.
 	char title[0xC];	//!< 12 characters for the game title.
 	char gamecode[0x4];	//!< 4 characters for the game code. first character is usally A or B, next 2 characters is a short title
-						//!< and last character is for destination/language.
+	//!< and last character is for destination/language.
 	u16 makercode;		//!< identifies the (commercial) developer.
 	u8 is96h;			//!< fixed value that is always 96h.
 	u8 unitcode;		//!< identifies the required hardware.
@@ -210,7 +210,7 @@ typedef enum {
  * @param buf Output buffer for title ID. (Must be at least 4 characters.
  * @return 0 on success; non-zero on error.
  */
-int grabTID(FILE* ndsFile, char *buf);
+int grabTID(FILE* ndsFile, char* buf);
 
 /**
  * Get text from an NDS banner.

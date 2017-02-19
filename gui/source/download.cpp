@@ -37,15 +37,20 @@ const char* DOWNLOAD_UNOFFICIALBOOTSTRAP_VER_URL = "https://github.com/Jolty95/T
  * Check Wi-Fi status.
  * @return True if Wi-Fi is connected; false if not.
  */
-bool checkWifiStatus(void) {
+bool checkWifiStatus(void)
+{
 	u32 wifiStatus;
 	bool res = false;
 
 	if (R_SUCCEEDED(ACU_GetWifiStatus(&wifiStatus)) && wifiStatus) {
-		if (logEnabled)	LogFMA("WifiStatus", "Active internet connection found", RetTime(true).c_str());
+		if (logEnabled)	{
+			LogFMA("WifiStatus", "Active internet connection found", RetTime(true).c_str());
+		}
 		res = true;
 	} else {
-		if (logEnabled)	LogFMA("WifiStatus", "No Internet connection found!", RetTime(true).c_str());
+		if (logEnabled)	{
+			LogFMA("WifiStatus", "No Internet connection found!", RetTime(true).c_str());
+		}
 	}
 
 	return res;
@@ -58,15 +63,17 @@ bool checkWifiStatus(void) {
  * @param mediaType How the file should be handled.
  * @return 0 on success; non-zero on error.
  */
-int downloadFile(const char* url, const char* file, MediaType mediaType) {
-	if (!checkWifiStatus())
+int downloadFile(const char* url, const char* file, MediaType mediaType)
+{
+	if (!checkWifiStatus()) {
 		return -1;
+	}
 
 	fsInit();
 	httpcInit(0x1000);
 	u8 method = 0;
 	httpcContext context;
-	u32 statuscode=0;
+	u32 statuscode = 0;
 	HTTPC_RequestMethod useMethod = HTTPC_METHOD_GET;
 
 	if (method <= 3 && method >= 1) {
@@ -85,11 +92,13 @@ int downloadFile(const char* url, const char* file, MediaType mediaType) {
 		Result ret = httpcOpenContext(&context, useMethod, (char*)url, 0);
 		httpcSetSSLOpt(&context, SSLCOPT_DisableVerify);
 
-		if (ret==0) {
-			if(R_SUCCEEDED(httpcBeginRequest(&context))){
-				u32 contentsize=0;
-				if(R_FAILED(httpcGetResponseStatusCode(&context, &statuscode))){
-					if (logEnabled) LogFM("downloadFile.error", "An error has ocurred trying to get response status code");
+		if (ret == 0) {
+			if (R_SUCCEEDED(httpcBeginRequest(&context))) {
+				u32 contentsize = 0;
+				if (R_FAILED(httpcGetResponseStatusCode(&context, &statuscode))) {
+					if (logEnabled) {
+						LogFM("downloadFile.error", "An error has ocurred trying to get response status code");
+					}
 					httpcCloseContext(&context);
 					httpcExit();
 					fsExit();
@@ -100,11 +109,13 @@ int downloadFile(const char* url, const char* file, MediaType mediaType) {
 					long int bytesWritten = 0;
 
 					Handle fileHandle;
-					FS_Path filePath=fsMakePath(PATH_ASCII, file);
+					FS_Path filePath = fsMakePath(PATH_ASCII, file);
 					FSUSER_OpenFileDirectly(&fileHandle, ARCHIVE_SDMC, fsMakePath(PATH_EMPTY, ""), filePath, FS_OPEN_CREATE | FS_OPEN_WRITE, 0x00000000);
 
-					if(R_FAILED(httpcGetDownloadSizeState(&context, NULL, &contentsize))){
-						if (logEnabled) LogFM("downloadFile.error", "An error has ocurred trying to get download size");
+					if (R_FAILED(httpcGetDownloadSizeState(&context, NULL, &contentsize))) {
+						if (logEnabled) {
+							LogFM("downloadFile.error", "An error has ocurred trying to get download size");
+						}
 						httpcCloseContext(&context);
 						httpcExit();
 						fsExit();
@@ -114,9 +125,11 @@ int downloadFile(const char* url, const char* file, MediaType mediaType) {
 					memset(buf, 0, contentsize);
 
 					do {
-						if(R_FAILED(ret = httpcDownloadData(&context, buf, contentsize, &readSize))){
+						if (R_FAILED(ret = httpcDownloadData(&context, buf, contentsize, &readSize))) {
 							// In case there is an error
-							if (logEnabled) LogFM("downloadFile.error", "An error has ocurred while downloading data");
+							if (logEnabled) {
+								LogFM("downloadFile.error", "An error has ocurred while downloading data");
+							}
 							free(buf);
 							httpcCloseContext(&context);
 							httpcExit();
@@ -153,17 +166,21 @@ int downloadFile(const char* url, const char* file, MediaType mediaType) {
 
 					free(buf);
 				}
-			}else{
+			} else {
 				// There was an error begining the request
-				if (logEnabled) LogFM("downloadFile.error", "An error has ocurred trying to request server");
+				if (logEnabled) {
+					LogFM("downloadFile.error", "An error has ocurred trying to request server");
+				}
 				httpcCloseContext(&context);
 				httpcExit();
 				fsExit();
 				return -1;
 			}
-		}else{
+		} else {
 			// There was a problem opening HTTP context
-			if (logEnabled) LogFM("downloadFile.error", "An error has ocurred trying to open HTTP context");
+			if (logEnabled) {
+				LogFM("downloadFile.error", "An error has ocurred trying to open HTTP context");
+			}
 			httpcCloseContext(&context);
 			httpcExit();
 			fsExit();
@@ -181,8 +198,11 @@ int downloadFile(const char* url, const char* file, MediaType mediaType) {
  * Check for a TWLoader update.
  * @return 0 if an update is available; non-zero if up to date or an error occurred.
  */
-int checkUpdate(void) {
-	if (logEnabled)	LogFM("checkUpdate", "Checking updates...");
+int checkUpdate(void)
+{
+	if (logEnabled)	{
+		LogFM("checkUpdate", "Checking updates...");
+	}
 	static const char title[] = "Now checking TWLoader version...";
 	DialogBoxAppear(title, 0);
 	sf2d_start_frame(GFX_BOTTOM, GFX_LEFT);
@@ -195,7 +215,9 @@ int checkUpdate(void) {
 	sf2d_swapbuffers();
 	remove("sdmc:/_nds/twloader/ver");
 	int res = downloadFile(DOWNLOAD_VER_URL, "/_nds/twloader/ver", MEDIA_SD_FILE);
-	if (logEnabled)	LogFM("checkUpdate", "downloadFile() end");
+	if (logEnabled)	{
+		LogFM("checkUpdate", "downloadFile() end");
+	}
 	if (res == 0) {
 
 		bool isUnknown = false;
@@ -203,19 +225,19 @@ int checkUpdate(void) {
 		if (VerFile) {
 			/** This is the same method as checkBootstrapVersion() **/
 			long fileSize;
-			
-			fseek(VerFile , 0 , SEEK_END);
+
+			fseek(VerFile, 0, SEEK_END);
 			fileSize = ftell(VerFile);
-			
+
 			char buf[fileSize + 1];
 
 			// Clean buf array
-			for (size_t i=0; i< sizeof(buf); i++){
+			for (size_t i = 0; i < sizeof(buf); i++) {
 				buf[i] = '\0';
-			}	
-			
+			}
+
 			rewind(VerFile);
-			fread(buf,1,sizeof(settings_latestvertext),VerFile);
+			fread(buf, 1, sizeof(settings_latestvertext), VerFile);
 			buf[sizeof(buf) - 1] = '\0';
 			strcpy(settings_latestvertext, buf);
 			fclose(VerFile);
@@ -225,8 +247,12 @@ int checkUpdate(void) {
 			strcpy(settings_latestvertext, "Unknown");
 			isUnknown = true;
 		}
-		if (logEnabled)	LogFMA("checkUpdate", "Reading downloaded version:", settings_latestvertext);
-		if (logEnabled)	LogFMA("checkUpdate", "Reading GUI version:", settings_vertext);
+		if (logEnabled)	{
+			LogFMA("checkUpdate", "Reading downloaded version:", settings_latestvertext);
+		}
+		if (logEnabled)	{
+			LogFMA("checkUpdate", "Reading GUI version:", settings_vertext);
+		}
 
 		sf2d_start_frame(GFX_BOTTOM, GFX_LEFT);
 		if (screenmode == SCREEN_MODE_SETTINGS) {
@@ -235,23 +261,31 @@ int checkUpdate(void) {
 		sf2d_draw_texture(dialogboxtex, 0, 0);
 		if (!isUnknown && !strcmp(settings_latestvertext, settings_vertext)) {
 			// Version is not different.
-			if (logEnabled)	LogFMA("checkUpdate", "Comparing...", "Are equals");
-		
-			if (screenmode == SCREEN_MODE_SETTINGS) {				
+			if (logEnabled)	{
+				LogFMA("checkUpdate", "Comparing...", "Are equals");
+			}
+
+			if (screenmode == SCREEN_MODE_SETTINGS) {
 				showdialogbox = false;
-			}else{
+			} else {
 				sf2d_end_frame();
 				sf2d_swapbuffers();
 			}
-			
-			if (logEnabled)	LogFM("checkUpdate", "TWLoader is up-to-date!");			
+
+			if (logEnabled)	{
+				LogFM("checkUpdate", "TWLoader is up-to-date!");
+			}
 			return -1;
 		}
-		if (logEnabled)	LogFMA("checkUpdate", "Comparing...", "NO equals");
+		if (logEnabled)	{
+			LogFMA("checkUpdate", "Comparing...", "NO equals");
+		}
 		showdialogbox = false;
 		return 0;
 	}
-	if (logEnabled)	LogFM("checkUpdate", "Problem downloading ver file!");
+	if (logEnabled)	{
+		LogFM("checkUpdate", "Problem downloading ver file!");
+	}
 	showdialogbox = false;
 	return -1;
 }
@@ -259,24 +293,25 @@ int checkUpdate(void) {
 /**
  * Download the TWLoader CIAs.
  */
-void DownloadTWLoaderCIAs(void) {
+void DownloadTWLoaderCIAs(void)
+{
 	sftd_draw_textf(font, 12, 16, RGBA8(0, 0, 0, 255), 12, "Now downloading TWLoader to latest version...");
 	sftd_draw_textf(font, 12, 30, RGBA8(0, 0, 0, 255), 12, "(GUI)");
 	sf2d_end_frame();
-	sf2d_swapbuffers();	
-	
+	sf2d_swapbuffers();
+
 	int res;
-	
+
 	// Check if sdmc:/cia folder exist (most A9LH users have that folder already)
 	struct stat st;
-	if(stat("sdmc:/cia",&st) == 0){		
+	if (stat("sdmc:/cia", &st) == 0) {
 		// Use root/cia folder instead
-		res = downloadFile(DOWNLOAD_TWLOADER_URL,"/cia/TWLoader.cia", MEDIA_SD_CIA);
-	}else{
+		res = downloadFile(DOWNLOAD_TWLOADER_URL, "/cia/TWLoader.cia", MEDIA_SD_CIA);
+	} else {
 		mkdir("sdmc:/_nds/twloader/cia", 0777); // Use twloader/cia folder instead
-		res = downloadFile(DOWNLOAD_TWLOADER_URL,"/_nds/twloader/cia/TWLoader.cia", MEDIA_SD_CIA);
+		res = downloadFile(DOWNLOAD_TWLOADER_URL, "/_nds/twloader/cia/TWLoader.cia", MEDIA_SD_CIA);
 	}
-	
+
 	sf2d_start_frame(GFX_BOTTOM, GFX_LEFT);
 	if (screenmode == SCREEN_MODE_SETTINGS) {
 		sf2d_draw_texture(settingstex, 0, 0);
@@ -288,16 +323,16 @@ void DownloadTWLoaderCIAs(void) {
 		sf2d_end_frame();
 		sf2d_swapbuffers();
 		// Delete first if installed.
-		if(checkTWLNANDSide()){
+		if (checkTWLNANDSide()) {
 			amInit();
 			AM_DeleteTitle(MEDIATYPE_NAND, TWLNAND_TID);
 			amExit();
 		}
-		if(stat("sdmc:/cia",&st) == 0){		
+		if (stat("sdmc:/cia", &st) == 0) {
 			// Use root/cia folder instead
-			res = downloadFile(DOWNLOAD_TWLNANDSIDE_URL,"/cia/TWLoader - TWLNAND side.cia", MEDIA_NAND_CIA);
-		}else{		
-			res = downloadFile(DOWNLOAD_TWLNANDSIDE_URL,"/_nds/twloader/cia/TWLoader - TWLNAND side.cia", MEDIA_NAND_CIA);
+			res = downloadFile(DOWNLOAD_TWLNANDSIDE_URL, "/cia/TWLoader - TWLNAND side.cia", MEDIA_NAND_CIA);
+		} else {
+			res = downloadFile(DOWNLOAD_TWLNANDSIDE_URL, "/_nds/twloader/cia/TWLoader - TWLNAND side.cia", MEDIA_NAND_CIA);
 		}
 		sf2d_start_frame(GFX_BOTTOM, GFX_LEFT);
 		if (screenmode == SCREEN_MODE_SETTINGS) {
@@ -320,7 +355,8 @@ void DownloadTWLoaderCIAs(void) {
 /**
  * Update nds-bootstrap to the latest unofficial build.
  */
-void UpdateBootstrapUnofficial(void) {
+void UpdateBootstrapUnofficial(void)
+{
 	static const char title[] = "Now updating bootstrap (Unofficial)...";
 	DialogBoxAppear(title, 0);
 	sf2d_start_frame(GFX_BOTTOM, GFX_LEFT);
@@ -335,7 +371,7 @@ void UpdateBootstrapUnofficial(void) {
 	remove("sdmc:/_nds/twloader/unofficial-bootstrap");
 	downloadBootstrapVersion(false);
 	checkBootstrapVersion();
-	downloadFile(DOWNLOAD_UNOFFICIALBOOTSTRAP_URL,"/_nds/unofficial-bootstrap.nds", MEDIA_SD_FILE);
+	downloadFile(DOWNLOAD_UNOFFICIALBOOTSTRAP_URL, "/_nds/unofficial-bootstrap.nds", MEDIA_SD_FILE);
 	if (screenmode == SCREEN_MODE_SETTINGS) {
 		DialogBoxDisappear("Done!", 0);
 	}
@@ -344,7 +380,8 @@ void UpdateBootstrapUnofficial(void) {
 /**
  * Update nds-bootstrap to the latest release build.
  */
-void UpdateBootstrapRelease(void) {
+void UpdateBootstrapRelease(void)
+{
 	static const char title[] = "Now updating bootstrap (Release)...";
 	DialogBoxAppear(title, 0);
 	sf2d_start_frame(GFX_BOTTOM, GFX_LEFT);
@@ -359,7 +396,7 @@ void UpdateBootstrapRelease(void) {
 	remove("sdmc:/_nds/twloader/release-bootstrap");
 	downloadBootstrapVersion(true);
 	checkBootstrapVersion();
-	downloadFile(DOWNLOAD_OFFICIALBOOTSTRAP_URL,"/_nds/release-bootstrap.nds", MEDIA_SD_FILE);
+	downloadFile(DOWNLOAD_OFFICIALBOOTSTRAP_URL, "/_nds/release-bootstrap.nds", MEDIA_SD_FILE);
 	if (screenmode == SCREEN_MODE_SETTINGS) {
 		DialogBoxDisappear("Done!", 0);
 	}
@@ -371,10 +408,10 @@ void UpdateBootstrapRelease(void) {
  * @param ba_region_fallback Pointer to const char* to store the fallback region.
  * @return GameTDB region code.
  */
-static const char *getGameTDBRegion(u8 tid_region, const char **pFallback)
+static const char* getGameTDBRegion(u8 tid_region, const char** pFallback)
 {
 	// European boxart languages.
-	static const char *const ba_langs_eur[] = {
+	static const char* const ba_langs_eur[] = {
 		"EN",	// Japanese (English used in place)
 		"EN",	// English
 		"FR",	// French
@@ -389,8 +426,8 @@ static const char *getGameTDBRegion(u8 tid_region, const char **pFallback)
 		"ZHTW"	// Traditional Chinese
 	};
 
-	const char *ba_region_fallback = NULL;
-	const char *ba_region;
+	const char* ba_region_fallback = NULL;
+	const char* ba_region;
 
 	// Get the system region.
 	// This is needed in order to differentiate the 'O' region code
@@ -424,7 +461,7 @@ static const char *getGameTDBRegion(u8 tid_region, const char **pFallback)
 				ba_region_fallback = "EN";
 				break;
 			}
-			// fall-through
+		// fall-through
 		case 'P':			// Europe
 		default:
 			// System is not USA region.
@@ -483,27 +520,30 @@ static const char *getGameTDBRegion(u8 tid_region, const char **pFallback)
  * @param ba_TID Game ID. (4 characters, NULL-terminated)
  * @return 0 on success; non-zero on error.
  */
-static int downloadBoxArt_internal(const char *ba_TID)
+static int downloadBoxArt_internal(const char* ba_TID)
 {
 	char path[256];
 	char http_url[256];
-	if (logEnabled)	LogFMA("downloadBoxArt_internal", "Downloading boxart for TID", ba_TID);
+	if (logEnabled)	{
+		LogFMA("downloadBoxArt_internal", "Downloading boxart for TID", ba_TID);
+	}
 
-	const char *ba_region_fallback = NULL;
-	const char *ba_region = getGameTDBRegion(ba_TID[3], &ba_region_fallback);
-	if (!ba_region)
+	const char* ba_region_fallback = NULL;
+	const char* ba_region = getGameTDBRegion(ba_TID[3], &ba_region_fallback);
+	if (!ba_region) {
 		return -1;
+	}
 
 	// NOTE: downloadFile() doesn't use devoptab,
 	// so don't prefix the filename with sdmc:/.
 	snprintf(path, sizeof(path), "/_nds/twloader/boxart/%.4s.png", ba_TID);
 	snprintf(http_url, sizeof(http_url), "http://art.gametdb.com/ds/coverS/%s/%.4s.png",
-		 ba_region, ba_TID);
+	         ba_region, ba_TID);
 	int res = downloadFile(http_url, path, MEDIA_SD_FILE);
 	if (res != 0 && ba_region_fallback != NULL) {
 		// Try the fallback region.
 		snprintf(http_url, sizeof(http_url), "http://art.gametdb.com/ds/coverS/%s/%.4s.png",
-			 ba_region_fallback, ba_TID);
+		         ba_region_fallback, ba_TID);
 		res = downloadFile(http_url, path, MEDIA_SD_FILE);
 	}
 	return res;
@@ -517,12 +557,12 @@ static int downloadBoxArt_internal(const char *ba_TID)
 int downloadBootstrapVersion(bool type)
 {
 	int res = -1;
-	if (type){		
-		res = downloadFile(DOWNLOAD_OFFICIALBOOTSTRAP_VER_URL,"/_nds/twloader/release-bootstrap", MEDIA_SD_FILE);
-	}else{
-		res = downloadFile(DOWNLOAD_UNOFFICIALBOOTSTRAP_VER_URL,"/_nds/twloader/unofficial-bootstrap", MEDIA_SD_FILE);
+	if (type) {
+		res = downloadFile(DOWNLOAD_OFFICIALBOOTSTRAP_VER_URL, "/_nds/twloader/release-bootstrap", MEDIA_SD_FILE);
+	} else {
+		res = downloadFile(DOWNLOAD_UNOFFICIALBOOTSTRAP_VER_URL, "/_nds/twloader/unofficial-bootstrap", MEDIA_SD_FILE);
 	}
-	
+
 	return res;
 }
 
@@ -530,119 +570,156 @@ int downloadBootstrapVersion(bool type)
  * check, download and store bootstrap version
  */
 
-void checkBootstrapVersion(void){
-	
+void checkBootstrapVersion(void)
+{
+
 	bool res = false;
 	long fileSize;
 	char buf[26];
-	if (logEnabled) LogFM("download.checkBootstrapVersion()", "Checking bootstrap version");
+	if (logEnabled) {
+		LogFM("download.checkBootstrapVersion()", "Checking bootstrap version");
+	}
 	// Clean buf array
-	for (size_t i=0; i< sizeof(buf); i++){
+	for (size_t i = 0; i < sizeof(buf); i++) {
 		buf[i] = '\0';
 	}
-	
+
 	FILE* VerFile = fopen("sdmc:/_nds/twloader/release-bootstrap", "r");
-	if (!VerFile){
-		if (logEnabled) LogFM("download.checkBootstrapVersion()", "release-bootstrap ver file not found.");
-		if(checkWifiStatus()){
-			if (logEnabled) LogFM("download.checkBootstrapVersion()", "downloading release-bootstrap ver file.");
+	if (!VerFile) {
+		if (logEnabled) {
+			LogFM("download.checkBootstrapVersion()", "release-bootstrap ver file not found.");
+		}
+		if (checkWifiStatus()) {
+			if (logEnabled) {
+				LogFM("download.checkBootstrapVersion()", "downloading release-bootstrap ver file.");
+			}
 			res = downloadBootstrapVersion(true); // true == release
-		}else{
-			if (logEnabled) LogFM("download.checkBootstrapVersion()", "No release version file available.");
+		} else {
+			if (logEnabled) {
+				LogFM("download.checkBootstrapVersion()", "No release version file available.");
+			}
 			settings_releasebootstrapver = "No version available";
 		}
-	}else{
-		fseek(VerFile , 0 , SEEK_END);
+	} else {
+		fseek(VerFile, 0, SEEK_END);
 		fileSize = ftell(VerFile);
 		rewind(VerFile);
-		fread(buf,1,fileSize,VerFile);
+		fread(buf, 1, fileSize, VerFile);
 		buf[fileSize - 1] = '\0';
 		settings_releasebootstrapver = buf;
 		fclose(VerFile);
-		if (logEnabled) LogFMA("download.checkBootstrapVersion()", "Reading release bootstrap ver file:", settings_releasebootstrapver.c_str());
+		if (logEnabled) {
+			LogFMA("download.checkBootstrapVersion()", "Reading release bootstrap ver file:", settings_releasebootstrapver.c_str());
+		}
 	}
-	
-	if (res == -1) settings_releasebootstrapver = "No version available";
-	
+
+	if (res == -1) {
+		settings_releasebootstrapver = "No version available";
+	}
+
 	fclose(VerFile);
-	
+
 	// Clean buf array
-	for (size_t i=0; i< sizeof(buf); i++){
+	for (size_t i = 0; i < sizeof(buf); i++) {
 		buf[i] = '\0';
 	}
-	
-	if(res == 0){
-		if (logEnabled) LogFM("download.checkBootstrapVersion()", "Re-opening release bootstrap ver file.");
+
+	if (res == 0) {
+		if (logEnabled) {
+			LogFM("download.checkBootstrapVersion()", "Re-opening release bootstrap ver file.");
+		}
 		// Try to open again
 		VerFile = fopen("sdmc:/_nds/twloader/release-bootstrap", "r");
-		if (!VerFile){
-				if (logEnabled) LogFM("download.checkBootstrapVersion()", "No release version file available #2.");
-				settings_releasebootstrapver = "No version available";
-		}else{
-			fseek(VerFile , 0 , SEEK_END);
+		if (!VerFile) {
+			if (logEnabled) {
+				LogFM("download.checkBootstrapVersion()", "No release version file available #2.");
+			}
+			settings_releasebootstrapver = "No version available";
+		} else {
+			fseek(VerFile, 0, SEEK_END);
 			fileSize = ftell(VerFile);
 			rewind(VerFile);
-			fread(buf,1,fileSize,VerFile);
+			fread(buf, 1, fileSize, VerFile);
 			buf[fileSize - 1] = '\0';
 			settings_releasebootstrapver = buf;
 			fclose(VerFile);
-			if (logEnabled) LogFMA("download.checkBootstrapVersion()", "Reading release bootstrap ver file #2:", settings_releasebootstrapver.c_str());
+			if (logEnabled) {
+				LogFMA("download.checkBootstrapVersion()", "Reading release bootstrap ver file #2:", settings_releasebootstrapver.c_str());
+			}
 		}
 	}
-	
-	res = false; // Just to be sure	
-	
+
+	res = false; // Just to be sure
+
 	VerFile = fopen("sdmc:/_nds/twloader/unofficial-bootstrap", "r");
-	if (!VerFile){
-		if (logEnabled) LogFM("download.checkBootstrapVersion()", "unofficial-bootstrap ver file not found.");
-		if(checkWifiStatus()){
-			if (logEnabled) LogFM("download.checkBootstrapVersion()", "downloading unofficial-bootstrap ver file.");
+	if (!VerFile) {
+		if (logEnabled) {
+			LogFM("download.checkBootstrapVersion()", "unofficial-bootstrap ver file not found.");
+		}
+		if (checkWifiStatus()) {
+			if (logEnabled) {
+				LogFM("download.checkBootstrapVersion()", "downloading unofficial-bootstrap ver file.");
+			}
 			res = downloadBootstrapVersion(false); // false == unofficial
-		}else{
-			if (logEnabled) LogFM("download.checkBootstrapVersion()", "No unofficial version file available.");
+		} else {
+			if (logEnabled) {
+				LogFM("download.checkBootstrapVersion()", "No unofficial version file available.");
+			}
 			settings_unofficialbootstrapver = "No version available";
 		}
-	}else{
-		fseek(VerFile , 0 , SEEK_END);
+	} else {
+		fseek(VerFile, 0, SEEK_END);
 		fileSize = ftell(VerFile);
 		rewind(VerFile);
-		fread(buf,1,fileSize,VerFile);
+		fread(buf, 1, fileSize, VerFile);
 		buf[fileSize - 1] = '\0';
 		settings_unofficialbootstrapver = buf;
 		fclose(VerFile);
-		if (logEnabled) LogFMA("download.checkBootstrapVersion()", "Reading unofficial bootstrap ver file:", settings_unofficialbootstrapver.c_str());
+		if (logEnabled) {
+			LogFMA("download.checkBootstrapVersion()", "Reading unofficial bootstrap ver file:", settings_unofficialbootstrapver.c_str());
+		}
 	}
-	if (res == -1) settings_unofficialbootstrapver = "No version available";
+	if (res == -1) {
+		settings_unofficialbootstrapver = "No version available";
+	}
 
 	fclose(VerFile);
-	
-	if(res == 0){
-		if (logEnabled) LogFM("download.checkBootstrapVersion()", "Re-opening unofficial bootstrap ver file.");
+
+	if (res == 0) {
+		if (logEnabled) {
+			LogFM("download.checkBootstrapVersion()", "Re-opening unofficial bootstrap ver file.");
+		}
 		// Try to open again
 		VerFile = fopen("sdmc:/_nds/twloader/unofficial-bootstrap", "r");
-		if (!VerFile){
-				if (logEnabled) LogFM("download.checkBootstrapVersion()", "No unofficial version file available #2.");		
-				settings_unofficialbootstrapver = "No version available";
-		}else{
-			fseek(VerFile , 0 , SEEK_END);
+		if (!VerFile) {
+			if (logEnabled) {
+				LogFM("download.checkBootstrapVersion()", "No unofficial version file available #2.");
+			}
+			settings_unofficialbootstrapver = "No version available";
+		} else {
+			fseek(VerFile, 0, SEEK_END);
 			fileSize = ftell(VerFile);
 			rewind(VerFile);
-			fread(buf,1,fileSize,VerFile);
+			fread(buf, 1, fileSize, VerFile);
 			buf[fileSize - 1] = '\0';
 			settings_unofficialbootstrapver = buf;
 			fclose(VerFile);
-			if (logEnabled) LogFMA("download.checkBootstrapVersion()", "Reading unofficial bootstrap ver file #2:", settings_unofficialbootstrapver.c_str());
+			if (logEnabled) {
+				LogFMA("download.checkBootstrapVersion()", "Reading unofficial bootstrap ver file #2:", settings_unofficialbootstrapver.c_str());
+			}
 		}
 	}
 }
- 
+
 /**
  * Download Slot-1 boxart.
  */
 void downloadSlot1BoxArt(const char* TID)
 {
-	if (logEnabled)	LogFM("Main.downloadSlot1BoxArt", "Checking box art (Slot-1 card).");
-	
+	if (logEnabled)	{
+		LogFM("Main.downloadSlot1BoxArt", "Checking box art (Slot-1 card).");
+	}
+
 	char ba_TID[5];
 	snprintf(ba_TID, sizeof(ba_TID), "%.4s", TID);
 	ba_TID[4] = 0;
@@ -654,7 +731,9 @@ void downloadSlot1BoxArt(const char* TID)
 		return;
 	}
 
-	if (logEnabled)	LogFM("Main.downloadSlot1BoxArt", "Downloading box art (Slot-1 card)");
+	if (logEnabled)	{
+		LogFM("Main.downloadSlot1BoxArt", "Downloading box art (Slot-1 card)");
+	}
 	downloadBoxArt_internal(ba_TID);
 }
 
@@ -670,18 +749,23 @@ void downloadBoxArt(void)
 	vector<u32> boxart_dl_tids;	// Title IDs of boxart to download.
 	boxart_all_tids.reserve(files.size() + fcfiles.size());
 	boxart_dl_tids.reserve(files.size() + fcfiles.size());
-	if (logEnabled)	LogFM("Download.downloadBoxArt", "Checking missing boxart on SD card...");
+	if (logEnabled)	{
+		LogFM("Download.downloadBoxArt", "Checking missing boxart on SD card...");
+	}
 
 	// Check if we're missing any boxart for ROMs on the SD card.
 	for (size_t boxartnum = 0; boxartnum < files.size(); boxartnum++) {
 		// Get the title ID from the ROM image.
-		const char *tempfile = files.at(boxartnum).c_str();
+		const char* tempfile = files.at(boxartnum).c_str();
 		snprintf(path, sizeof(path), "sdmc:/%s/%s", settings.ui.romfolder.c_str(), tempfile);
-		FILE *f_nds_file = fopen(path, "rb");
-		if (!f_nds_file)
+		FILE* f_nds_file = fopen(path, "rb");
+		if (!f_nds_file) {
 			continue;
-		
-		if (logEnabled)	LogFMA("DownloadBoxArt.SD CARD", "Path: ", path);
+		}
+
+		if (logEnabled)	{
+			LogFMA("DownloadBoxArt.SD CARD", "Path: ", path);
+		}
 		char ba_TID[5];
 		grabTID(f_nds_file, ba_TID);
 		ba_TID[4] = 0;
@@ -709,10 +793,10 @@ void downloadBoxArt(void)
 		if (!access(path, F_OK)) {
 			// Boxart file exists.
 			continue;
-		}else{
+		} else {
 			// Maybe boxart exist with fullname instead of TID
 			snprintf(path, sizeof(path), "sdmc:/_nds/twloader/boxart/%s.png", tempfile);
-			if(!access(path, F_OK)){
+			if (!access(path, F_OK)) {
 				// Boxart with fullname exist
 				continue;
 			}
@@ -721,21 +805,23 @@ void downloadBoxArt(void)
 		// Boxart file does not exist. Download it.
 		boxart_dl_tids.push_back(tid);
 	}
-	
+
 	// Check if we're missing any boxart for ROMs on the flashcard.
 	for (size_t boxartnum = 0; boxartnum < fcfiles.size(); boxartnum++) {
 		// Get the title ID from the INI file.
-		const char *tempfile = fcfiles.at(boxartnum).c_str();
+		const char* tempfile = fcfiles.at(boxartnum).c_str();
 		snprintf(path, sizeof(path), "sdmc:/%s/%s", settings.ui.fcromfolder.c_str(), tempfile);
-		CIniFile setfcrompathini(path);							
-		
-		std::string ba_TID = setfcrompathini.GetString("FLASHCARD-ROM", "TID", "");		
+		CIniFile setfcrompathini(path);
+
+		std::string ba_TID = setfcrompathini.GetString("FLASHCARD-ROM", "TID", "");
 		if (ba_TID.size() < 4) {
 			// Invalid TID.
 			continue;
 		}
-		
-		if (logEnabled)	LogFMA("DownloadBoxArt.FLASHCARD", "TID: ", ba_TID.c_str());		
+
+		if (logEnabled)	{
+			LogFMA("DownloadBoxArt.FLASHCARD", "TID: ", ba_TID.c_str());
+		}
 		// Did we already check for this boxart?
 		// NOTE: Storing byteswapped in order to sort correctly.
 		u32 tid;
@@ -758,10 +844,10 @@ void downloadBoxArt(void)
 		if (!access(path, F_OK)) {
 			// Boxart file exists.
 			continue;
-		}else{
+		} else {
 			// Maybe boxart exist with fullname instead of TID
 			snprintf(path, sizeof(path), "sdmc:/_nds/twloader/boxart/%s.png", tempfile);
-			if(!access(path, F_OK)){
+			if (!access(path, F_OK)) {
 				// Boxart with fullname exist
 				continue;
 			}
@@ -773,7 +859,7 @@ void downloadBoxArt(void)
 
 	// Check if we're missing boxart for the Slot-1 cartridge.
 	gamecardPoll(true);
-	const char *const card_gameID = gamecardGetGameID();
+	const char* const card_gameID = gamecardGetGameID();
 	if (card_gameID) {
 		// Did we already check for this card?
 		// NOTE: Storing byteswapped in order to sort correctly.
@@ -792,11 +878,15 @@ void downloadBoxArt(void)
 			}
 		}
 	}
-	
-	if (logEnabled)	LogFM("DownloadBoxArt.Read_BoxArt", "Boxart read correctly.");
+
+	if (logEnabled)	{
+		LogFM("DownloadBoxArt.Read_BoxArt", "Boxart read correctly.");
+	}
 	if (boxart_dl_tids.empty()) {
 		// No boxart to download.
-		if (logEnabled)	LogFM("Download.downloadBoxArt", "No boxart to download.");
+		if (logEnabled)	{
+			LogFM("Download.downloadBoxArt", "No boxart to download.");
+		}
 		return;
 	}
 
@@ -806,7 +896,9 @@ void downloadBoxArt(void)
 	// Download the boxart.
 	char s_boxart_total[12];
 	snprintf(s_boxart_total, sizeof(s_boxart_total), "%zu", boxart_dl_tids.size());
-	if (logEnabled)	LogFM("DownloadBoxArt.downloading_process", "Downloading missing boxart");
+	if (logEnabled)	{
+		LogFM("DownloadBoxArt.downloading_process", "Downloading missing boxart");
+	}
 	for (size_t boxartnum = 0; boxartnum < boxart_dl_tids.size(); boxartnum++) {
 		static const char title[] = "Downloading missing boxart...";
 
@@ -815,7 +907,7 @@ void downloadBoxArt(void)
 		u32 tid = __builtin_bswap32(boxart_dl_tids[boxartnum]);
 		memcpy(ba_TID, &tid, 4);
 		ba_TID[4] = 0;
-		
+
 		// Show the dialog.
 		DialogBoxAppear(title, 0);
 		sf2d_start_frame(GFX_BOTTOM, GFX_LEFT);
@@ -828,7 +920,8 @@ void downloadBoxArt(void)
 		sf2d_end_frame();
 		sf2d_swapbuffers();
 
-		if (strcmp (ba_TID, "####") != 0)
+		if (strcmp(ba_TID, "####") != 0) {
 			downloadBoxArt_internal(ba_TID);
+		}
 	}
 }

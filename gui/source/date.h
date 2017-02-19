@@ -22,7 +22,7 @@ typedef enum {
  * @return Number of bytes written, excluding the NULL terminator.
  * @return Current date. (Caller must free() this string.)
  */
-size_t GetDate(DateFormat format, char *buf, size_t size);
+size_t GetDate(DateFormat format, char* buf, size_t size);
 
 /**
  * Get the current time formatted for the top bar.

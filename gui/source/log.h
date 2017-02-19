@@ -17,7 +17,7 @@
 extern bool LogCreated;
 
 int createLog(void);
-void Log(const char *message);
-void LogFM(const char *from, const char *message);
-void LogFMA(const char *from, const char *message, const char *additional_info);
+void Log(const char* message);
+void LogFM(const char* from, const char* message);
+void LogFMA(const char* from, const char* message, const char* additional_info);
 #endif // LOG_H
